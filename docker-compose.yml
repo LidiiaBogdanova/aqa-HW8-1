@@ -1,0 +1,16 @@
+version: '3'
+services:
+  mysqldb:
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./src/test/resources:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=app
+      - MYSQL_USER=app
+      - MYSQL_PASSWORD=pass
+
+#команда для запуска приложения
+#java -jar app-deadline.jar -P:jdbc.url=jdbc:mysql://localhost:3306/app -P:jdbc.user=app -P:jdbc.password=pass
