@@ -13,23 +13,28 @@ public class LoginPage {
     private SelenideElement errorNotification = $("[data-test-id=error-notification]");
 
     public VerificationPage validLogin(DataHelper.AuthInfo info) {
-        loginField.setValue(info.getLogin());
-        passwordField.setValue(info.getPassword());
-        loginButton.click();
+        performLogin(info);
         return new VerificationPage();
 
 
     }
-    public void click(){
+
+    public void  invalidLogin(DataHelper.AuthInfo info) {
+        performLogin(info);
+        errorNotification.shouldHave(Condition.text("Ошибка! Неверно указан логин или пароль"));
+     }
+
+    private void performLogin(DataHelper.AuthInfo info) {
+        loginField.setValue(info.getLogin());
+        passwordField.setValue(info.getPassword());
         loginButton.click();
     }
-
-    public LoginPage invalidLogin(DataHelper.AuthInfo info) {
-        loginField.setValue(info.getLogin());
-        passwordField.setValue("123qwerty");
+    public void TriceInvalidLogin(DataHelper.AuthInfo invalidAuthInfo, DataHelper.AuthInfo validAuthInfo){
+     performLogin(invalidAuthInfo);
+     loginButton.click();
         loginButton.click();
-        errorNotification.shouldHave(Condition.text("Ошибка! Неверно указан логин или пароль"));
-        return new LoginPage();
+        performLogin(validAuthInfo);
+        errorNotification.shouldHave(Condition.text("Ошибка! Превышено допустимое количество попыток авторизации. Попробуйте позже."));
     }
 
 
